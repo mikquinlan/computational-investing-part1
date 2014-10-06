@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 import time
 import itertools as it
+from decimal import Decimal
 
 class Simulator:
 
@@ -142,18 +143,26 @@ class Simulator:
 
         increments = np.arange(0, 1.1, 0.1)
         # combinations = it.combinations(range, len(ls_symbols))
-        permutations = it.permutations(increments, len(ls_symbols))
+        permutations = it.combinations_with_replacement(increments, len(ls_symbols))
+        rounded_permutations = []
+        for permutation in permutations:
+            rounded = []
+            for entry in permutation:
+                rounded.append(float(Decimal(str(entry)).quantize(Decimal('0.1'))))
+            rounded_permutations.append(rounded)
+        print "Rounded permutations"
+        print (rounded_permutations)
         #Filter out those combinations that don't add up to 1.0
         whole_portfolio_combinations = []
-        for combination in permutations:
+        for combination in rounded_permutations:
             sum_allocations = 0
             for x in combination:
                 sum_allocations += x
             if sum_allocations == 1.0:
                 whole_portfolio_combinations.append(combination)
-            # else:
-            #     print "Discarding "
-            #     print (combination)
+            else:
+                print "Discarding"
+                print (combination)
 
         #Now have all the combinations that add up to 1, get the data then calculate figures and save the best sharp ratio
         d_data = self.readData(start_date, end_date, ls_symbols)[0]
@@ -161,8 +170,9 @@ class Simulator:
         na_normalized_price = na_price / na_price[0, :]
         best_allocation = []
         best_sharp_ratio = 0
-        print "combinations to be analyzed"
-        print (whole_portfolio_combinations)
+        print "Combinations to be analyzed"
+        for combination in whole_portfolio_combinations:
+            print (combination)
         for combination in whole_portfolio_combinations:
             f_portf_sharpe = self.calc_stats(na_normalized_price, combination)[2]
             if f_portf_sharpe > best_sharp_ratio:
@@ -182,5 +192,5 @@ if __name__ == '__main__':
 
     simulator = Simulator()
 
-    volatility_std_dev, daily_ret, sharpe, cum_ret = simulator.simulate(start_date, end_date, symbols, allocations, True)
+    # volatility_std_dev, daily_ret, sharpe, cum_ret = simulator.simulate(start_date, end_date, symbols, allocations, True)
     simulator.optimize(start_date, end_date, symbols)
