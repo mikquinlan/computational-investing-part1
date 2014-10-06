@@ -143,14 +143,6 @@ class Simulator:
         increments = np.arange(0, 1.1, 0.1)
         # combinations = it.combinations(range, len(ls_symbols))
         permutations = it.permutations(increments, len(ls_symbols))
-        rounded_permutations = []
-        for permutation in permutations:
-            rounded = []
-            for entry in permutation:
-                rounded.append(round(entry, 1))
-            rounded_permutations.append(rounded)
-        print "Rounded permutations"
-        print (rounded_permutations)
         #Filter out those combinations that don't add up to 1.0
         whole_portfolio_combinations = []
         for combination in permutations:
