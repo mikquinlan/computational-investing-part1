@@ -162,7 +162,6 @@ class Simulator:
         print (best_allocation)
 
     def discover_valid_allocation_combinations(self):
-        print "discover"
         min = 0.0
         max = 1.0
         increment = 0.1
@@ -170,10 +169,10 @@ class Simulator:
         valid_allocations = []
         candidate_allocation = [0.0, 0.0, 0.0, 0.0]
 
-        for first_allocation in self.drange(min, max, increment):
-            for second_allocation in self.drange(min, max, increment):
-                for third_allocation in self.drange(min, max, increment):
-                    for fourth_allocation in self.drange(min, max, increment):
+        for first_allocation in self.frange(min, max, increment):
+            for second_allocation in self.frange(min, max, increment):
+                for third_allocation in self.frange(min, max, increment):
+                    for fourth_allocation in self.frange(min, max, increment):
                         candidate_allocation[0] = first_allocation
                         candidate_allocation[1] = second_allocation
                         candidate_allocation[2] = third_allocation
@@ -183,11 +182,25 @@ class Simulator:
 
         return valid_allocations
 
-    def drange(self, start, stop, step):
-        r = start
-        while r < stop:
-            yield r
-            r += step
+    def frange(self, start, end=None, inc=None):
+        "A range function, that does accept float increments..."
+        if end == None:
+            end = start + 0.0
+            start = 0.0
+
+        if inc == None:
+            inc = 1.0
+
+        L = []
+        while 1:
+            next = start + len(L) * inc
+            if inc > 0 and next >= end:
+                break
+            elif inc < 0 and next <= end:
+                break
+            L.append(next)
+
+        return L
 
     def is_valid_allocation(self, allocations):
         if len(allocations) == 4:
@@ -203,11 +216,13 @@ class Simulator:
 if __name__ == '__main__':
     start_date = [2011, 01, 01]
     end_date = [2011, 12, 31]
-    symbols = ['AAPL', 'GLD', 'GOOG', 'XOM']
-    allocations = [0.4, 0.4, 0.0, 0.2]
+    # symbols = ['AAPL', 'GLD', 'GOOG', 'XOM']
+    symbols = ['AXP', 'HPQ', 'IBM', 'HNZ']
+    # allocations = [0.4, 0.4, 0.0, 0.2]
+    allocations = [0.0, 0.0, 0.0, 1.0]
 
     simulator = Simulator()
 
-    # volatility_std_dev, daily_ret, sharpe, cum_ret = simulator.simulate(start_date, end_date, symbols, allocations, True)
+    #volatility_std_dev, daily_ret, sharpe, cum_ret = simulator.simulate(start_date, end_date, symbols, allocations, True)
     simulator.optimize(start_date, end_date, symbols)
 
