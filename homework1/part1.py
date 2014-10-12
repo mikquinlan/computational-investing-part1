@@ -217,12 +217,13 @@ if __name__ == '__main__':
     start_date = [2011, 01, 01]
     end_date = [2011, 12, 31]
     # symbols = ['AAPL', 'GLD', 'GOOG', 'XOM']
-    symbols = ['AXP', 'HPQ', 'IBM', 'HNZ']
+    # symbols = ['AXP', 'HPQ', 'IBM', 'HNZ']
+    symbols = ['BRCM', 'ADBE', 'AMD', 'ADI']
     # allocations = [0.4, 0.4, 0.0, 0.2]
-    allocations = [0.0, 0.0, 0.0, 1.0]
+    # allocations = [0.0, 0.0, 0.0, 1.0]
 
     simulator = Simulator()
 
-    #volatility_std_dev, daily_ret, sharpe, cum_ret = simulator.simulate(start_date, end_date, symbols, allocations, True)
+    # volatility_std_dev, daily_ret, sharpe, cum_ret = simulator.simulate(start_date, end_date, symbols, allocations, True)
     simulator.optimize(start_date, end_date, symbols)
 
